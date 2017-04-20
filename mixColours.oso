@@ -1,0 +1,12 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.6.2dev
+shader mixColours
+param	color	inC1	0 0 0		%read{0,0} %write{2147483647,-1}
+param	color	inC2	1 1 1		%read{0,0} %write{2147483647,-1}
+oparam	color	Cout	0 0 0		%read{2147483647,-1} %write{0,0}
+param	float	mixAmmount	0.5		%read{0,0} %write{2147483647,-1}
+code ___main___
+# mixColours.osl:7
+#     Cout = mix (inC1, inC2, mixAmmount);
+	mix		Cout inC1 inC2 mixAmmount 	%filename{"mixColours.osl"} %line{7} %argrw{"wrrr"}
+	end

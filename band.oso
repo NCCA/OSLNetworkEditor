@@ -1,0 +1,61 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.6.2dev
+shader band
+param	color	C1	1 1 1		%read{16,16} %write{2147483647,-1}
+param	color	C2	0 0 0		%read{17,17} %write{2147483647,-1}
+param	float	repeat	1		%read{2,8} %write{2147483647,-1}
+param	string	direction	"vertical"		%read{0,0} %write{2147483647,-1}
+oparam	color	Cout	0 0 0		%read{2147483647,-1} %write{16,17}
+global	float	u	%read{2,2} %write{2147483647,-1}
+global	float	v	%read{8,8} %write{2147483647,-1}
+local	float	ss	%read{14,14} %write{7,13}
+const	string	$const1	"vertical"		%read{0,0} %write{2147483647,-1}
+temp	int	$tmp1	%read{1,1} %write{0,0}
+temp	float	$tmp2	%read{4,7} %write{2,2}
+const	float	$const3	1		%read{4,12} %write{2147483647,-1}
+const	string	$const4	"mod"		%read{3,9} %write{2147483647,-1}
+temp	float	$tmp3	%read{6,6} %write{5,5}
+temp	float	$tmp4	%read{5,5} %write{4,4}
+temp	float	$tmp5	%read{7,7} %write{6,6}
+temp	float	$tmp6	%read{10,13} %write{8,8}
+temp	float	$tmp7	%read{12,12} %write{11,11}
+temp	float	$tmp8	%read{11,11} %write{10,10}
+temp	float	$tmp9	%read{13,13} %write{12,12}
+const	float	$const5	0.5		%read{14,14} %write{2147483647,-1}
+temp	int	$tmp10	%read{15,15} %write{14,14}
+code ___main___
+# band.osl:18
+# 	if(direction=="vertical")
+	eq		$tmp1 direction $const1 	%filename{"band.osl"} %line{18} %argrw{"wrr"}
+	if		$tmp1 8 14 	%argrw{"r"}
+# band.osl:20
+#   	ss=mod(u*repeat,1);
+	mul		$tmp2 u repeat 	%line{20} %argrw{"wrr"}
+	functioncall	$const4 8 	%argrw{"r"}
+# /Applications/Pixar/RenderManProServer-20.7/lib/osl/include/stdosl.h:135
+# PERCOMP1 (abs)
+	div		$tmp4 $tmp2 $const3 	%filename{"/Applications/Pixar/RenderManProServer-20.7/lib/osl/include/stdosl.h"} %line{135} %argrw{"wrr"}
+	floor		$tmp3 $tmp4 	%argrw{"wr"}
+	mul		$tmp5 $const3 $tmp3 	%argrw{"wrr"}
+	sub		ss $tmp2 $tmp5 	%argrw{"wrr"}
+# band.osl:24
+# 		ss=mod(v*repeat,1);
+	mul		$tmp6 v repeat 	%filename{"band.osl"} %line{24} %argrw{"wrr"}
+	functioncall	$const4 14 	%argrw{"r"}
+# /Applications/Pixar/RenderManProServer-20.7/lib/osl/include/stdosl.h:135
+# PERCOMP1 (sqrt)
+	div		$tmp8 $tmp6 $const3 	%filename{"/Applications/Pixar/RenderManProServer-20.7/lib/osl/include/stdosl.h"} %line{135} %argrw{"wrr"}
+	floor		$tmp7 $tmp8 	%argrw{"wr"}
+	mul		$tmp9 $const3 $tmp7 	%argrw{"wrr"}
+	sub		ss $tmp6 $tmp9 	%argrw{"wrr"}
+# band.osl:27
+# 	if(ss<0.5)
+	lt		$tmp10 ss $const5 	%filename{"band.osl"} %line{27} %argrw{"wrr"}
+	if		$tmp10 17 18 	%argrw{"r"}
+# band.osl:29
+# 		Cout=C1;
+	assign		Cout C1 	%line{29} %argrw{"wr"}
+# band.osl:33
+# 		Cout=C2;
+	assign		Cout C2 	%line{33} %argrw{"wr"}
+	end

@@ -1,0 +1,76 @@
+OpenShadingLanguage 1.00
+# Compiled by oslc 1.6.2dev
+surface dots
+param	color	baseColour	1 1 1		%read{14,14} %write{2147483647,-1}
+param	color	spotColour	0 0 0		%read{20,20} %write{2147483647,-1}
+param	float	fuzz	0.025		%read{16,17} %write{2147483647,-1}
+param	float	repeatU	1		%read{1,1} %write{2147483647,-1}
+param	float	repeatV	1		%read{7,7} %write{2147483647,-1}
+oparam	color	Cout	0 0 0		%read{20,20} %write{14,20}
+global	float	u	%read{1,1} %write{2147483647,-1}
+global	float	v	%read{7,7} %write{2147483647,-1}
+local	float	dist	%read{18,18} %write{15,15}
+local	float	inDisk	%read{20,20} %write{19,19}
+local	point	centre	%read{15,15} %write{0,0}
+local	float	uu	%read{13,13} %write{6,6}
+local	float	vv	%read{13,13} %write{12,12}
+local	point	here	%read{15,15} %write{13,13}
+const	point	$const1	0.5 0.5 0		%read{0,0} %write{2147483647,-1}
+temp	float	$tmp1	%read{3,6} %write{1,1}
+const	float	$const3	1		%read{3,19} %write{2147483647,-1}
+const	string	$const4	"mod"		%read{2,8} %write{2147483647,-1}
+temp	float	$tmp2	%read{5,5} %write{4,4}
+temp	float	$tmp3	%read{4,4} %write{3,3}
+temp	float	$tmp4	%read{6,6} %write{5,5}
+temp	float	$tmp5	%read{9,12} %write{7,7}
+temp	float	$tmp6	%read{11,11} %write{10,10}
+temp	float	$tmp7	%read{10,10} %write{9,9}
+temp	float	$tmp8	%read{12,12} %write{11,11}
+const	float	$const6	0		%read{13,13} %write{2147483647,-1}
+temp	float	$tmp9	%read{19,19} %write{18,18}
+const	float	$const7	0.30000001		%read{16,17} %write{2147483647,-1}
+temp	float	$tmp10	%read{18,18} %write{16,16}
+temp	float	$tmp11	%read{18,18} %write{17,17}
+code ___main___
+# dots.osl:11
+#     point centre=point (0.5,0.5,0);
+	assign		centre $const1 	%filename{"dots.osl"} %line{11} %argrw{"wr"}
+# dots.osl:12
+#     float uu=mod(u*repeatU,1);
+	mul		$tmp1 u repeatU 	%line{12} %argrw{"wrr"}
+	functioncall	$const4 7 	%argrw{"r"}
+# /Applications/Pixar/RenderManProServer-20.7/lib/osl/include/stdosl.h:135
+# PERCOMP1 (trunc)
+	div		$tmp3 $tmp1 $const3 	%filename{"/Applications/Pixar/RenderManProServer-20.7/lib/osl/include/stdosl.h"} %line{135} %argrw{"wrr"}
+	floor		$tmp2 $tmp3 	%argrw{"wr"}
+	mul		$tmp4 $const3 $tmp2 	%argrw{"wrr"}
+	sub		uu $tmp1 $tmp4 	%argrw{"wrr"}
+# dots.osl:13
+#     float vv=mod(v*repeatV,1);
+	mul		$tmp5 v repeatV 	%filename{"dots.osl"} %line{13} %argrw{"wrr"}
+	functioncall	$const4 13 	%argrw{"r"}
+# /Applications/Pixar/RenderManProServer-20.7/lib/osl/include/stdosl.h:135
+# PERCOMP1 (round)
+	div		$tmp7 $tmp5 $const3 	%filename{"/Applications/Pixar/RenderManProServer-20.7/lib/osl/include/stdosl.h"} %line{135} %argrw{"wrr"}
+	floor		$tmp6 $tmp7 	%argrw{"wr"}
+	mul		$tmp8 $const3 $tmp6 	%argrw{"wrr"}
+	sub		vv $tmp5 $tmp8 	%argrw{"wrr"}
+# dots.osl:14
+#     point here=point(uu,vv,0);
+	point		here uu vv $const6 	%filename{"dots.osl"} %line{14} %argrw{"wrrr"}
+# dots.osl:16
+#     Cout=baseColour;
+	assign		Cout baseColour 	%line{16} %argrw{"wr"}
+# dots.osl:18
+#     dist=distance(centre,here);
+	distance	dist centre here 	%line{18} %argrw{"wrr"}
+# dots.osl:19
+#     inDisk=1-smoothstep(0.3-fuzz,0.3+fuzz,dist);
+	sub		$tmp10 $const7 fuzz 	%line{19} %argrw{"wrr"}
+	add		$tmp11 $const7 fuzz 	%argrw{"wrr"}
+	smoothstep	$tmp9 $tmp10 $tmp11 dist 	%argrw{"wrrr"}
+	sub		inDisk $const3 $tmp9 	%argrw{"wrr"}
+# dots.osl:20
+#     Cout=mix(Cout,spotColour,inDisk);
+	mix		Cout Cout spotColour inDisk 	%line{20} %argrw{"wrrr"}
+	end
