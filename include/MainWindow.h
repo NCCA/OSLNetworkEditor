@@ -40,6 +40,7 @@ class MainWindow : public QMainWindow
     void addShader(const QString _name);
     QtNodes::NodeData *  createParam(ShaderParser::ParamType _p, QString _name) const;
     void loadShaderFromFile();
+    void writeXML()const;
 
 };
 

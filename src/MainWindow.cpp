@@ -3,6 +3,7 @@
 #include "ShaderDataModel.h"
 #include <QApplication>
 #include <QFileDialog>
+#include <QXmlStreamWriter>
 
 MainWindow::MainWindow(const QStringList _args,QWidget *_parent ): QMainWindow(_parent)
 {
@@ -42,6 +43,10 @@ void MainWindow::keyPressEvent(QKeyEvent *_event)
     case Qt::Key_Escape : QApplication::exit(EXIT_SUCCESS); break;
     case Qt::Key_A :
       loadShaderFromFile();
+    break;
+
+    case Qt::Key_W :
+      writeXML();
     break;
     default : break;
   }
@@ -107,7 +112,42 @@ void MainWindow::loadShaderFromFile()
   {
     addShader(f);
   }
+}
 
+void MainWindow::writeXML() const
+{
+  QString filename = QFileDialog::getSaveFileName(this->parentWidget(),
+                                     tr("Save Xml"), ".",
+                                     tr("Xml files (*.xml)"));
+
+
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+
+    QXmlStreamWriter xmlWriter(&file);
+    xmlWriter.setAutoFormatting(true);
+    xmlWriter.writeStartDocument();
+    xmlWriter.writeStartElement("RenderManOSLNetwork");
+    xmlWriter.writeStartElement("NodeList");
+    xmlWriter.writeStartElement("Node");
+    xmlWriter.writeEndElement();
+    xmlWriter.writeEndElement();
+
+    xmlWriter.writeStartElement("ConnectionList");
+    xmlWriter.writeStartElement("Connection");
+    xmlWriter.writeEndElement();
+    xmlWriter.writeEndElement();
+
+
+
+
+
+    xmlWriter.writeEndElement();
+
+
+
+
+    file.close();
 }
 
 
