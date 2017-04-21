@@ -1,5 +1,7 @@
 # Compiled Object files
 *.slo
+*.oso
+OSLNetworkEditor
 *.lo
 *.o
 # qt files
