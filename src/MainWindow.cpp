@@ -80,7 +80,7 @@ void MainWindow::addShader(const QString _name)
   ShaderParser s(_name.toStdString());
   QtNodes::DataModelRegistry &reg=m_scene->registry();
 
-  std::unique_ptr<Shader> model(new Shader(s.name().c_str(),s.numInputs(),s.numOutputs()));
+  std::unique_ptr<Shader> model(new Shader(s.name().c_str(),s.numInputs(),s.numOutputs(),this));
 
 
   for(auto a : s.getInputs())
@@ -140,21 +140,31 @@ void MainWindow::writeXML() const
     {
       xmlWriter.writeStartElement("Node");
         xmlWriter.writeStartElement("NodeID");
-        xmlWriter.writeCharacters(_node->name());
-          Shader *model= reinterpret_cast<Shader*>(_node);
-          xmlWriter.writeStartElement("Properties");
+          xmlWriter.writeCharacters(_node->name());
+        xmlWriter.writeEndElement(); // end NodeID
+        Shader *model= reinterpret_cast<Shader*>(_node);
+        xmlWriter.writeStartElement("NodeLayer");
+         xmlWriter.writeCharacters(model->getParamLayer());
+        xmlWriter.writeEndElement(); // end NodeLayer
+        xmlWriter.writeStartElement("Label");
+         xmlWriter.writeCharacters(model->getParamLabel());
+        xmlWriter.writeEndElement(); // end Label
+        QString visibility=model->getParamVisibility();
+        xmlWriter.writeStartElement("Properties");
           for(auto p : model->inputs())
           {
             // I store param name as type -> name so split and proccess
             QStringList d=p->type().name.split(" ");
             xmlWriter.writeStartElement(d[1]);
-              xmlWriter.writeStartElement("Type");
+            xmlWriter.writeStartElement("Visibility");
+            xmlWriter.writeCharacters(visibility);
+            xmlWriter.writeEndElement(); // end Visibility
 
+              xmlWriter.writeStartElement("Type");
               xmlWriter.writeCharacters(d[0]);
-              xmlWriter.writeEndElement();
+              xmlWriter.writeEndElement(); // end type
             xmlWriter.writeEndElement();
           }
-          xmlWriter.writeEndElement();
         xmlWriter.writeEndElement();
       xmlWriter.writeEndElement();
     };

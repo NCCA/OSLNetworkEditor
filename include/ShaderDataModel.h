@@ -6,6 +6,7 @@
 #include <nodes/NodeData.hpp>
 #include <nodes/NodeDataModel.hpp>
 #include "ShaderNodeData.h"
+#include "ShaderParams.h"
 #include <memory>
 
 
@@ -20,12 +21,14 @@ class Shader : public QtNodes::NodeDataModel
 public:
 
   virtual ~Shader() {}
-  Shader(QString _name ,unsigned int _numInputs, int _numOutputs);
+  Shader(QString _name ,unsigned int _numInputs, int _numOutputs,QWidget *_parent);
   Shader(Shader &&)=default;
   Shader(const Shader &);
   void addInput(QtNodes::NodeData *_input);
   void addOutput(QtNodes::NodeData *_output);
-
+  QString getParamLayer() const;
+  QString getParamLabel() const;
+  QString getParamVisibility() const;
   const std::vector<QtNodes::NodeData *> & inputs() const {return m_inputs;}
   const std::vector<QtNodes::NodeData *> & outputs() const {return m_outputs;}
   QString caption() const override;
@@ -54,9 +57,8 @@ public:
     unsigned int m_numOutputs;
     std::vector<QtNodes::NodeData *> m_inputs;
     std::vector<QtNodes::NodeData *> m_outputs;
-    QLineEdit * m_layer;
-
-
+    ShaderParams *m_shaderParams;
+    QWidget *m_parent;
 
 
 };

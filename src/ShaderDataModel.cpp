@@ -1,21 +1,15 @@
 #include "ShaderDataModel.h"
 #include <QDebug>
+#include "nodes/ConnectionStyle.hpp"
 // For some reason CMake could not generate moc-files correctly
 // without having a cpp for an QObject from hpp.
 
-Shader::Shader(QString _name ,unsigned int _numInputs, int _numOutputs)
+Shader::Shader(QString _name ,unsigned int _numInputs, int _numOutputs,QWidget *_parent=nullptr)
   : m_name(_name), m_numInputs(_numInputs), m_numOutputs(_numOutputs)
 {
-  m_layer = new QLineEdit("LayerName");
-//  m_layer->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
 
-//    QFont f = m_layer->font();
-//    f.setBold(true);
-//    f.setItalic(true);
-
-//    m_layer->setFont(f);
-    m_layer->setEnabled(true);
-    m_layer->installEventFilter(this);
+  m_shaderParams = new ShaderParams();
+  m_shaderParams->setStyleSheet(_parent->styleSheet());
 }
 
 Shader::Shader(const Shader &_s)
@@ -25,8 +19,8 @@ Shader::Shader(const Shader &_s)
   m_numOutputs=_s.m_numOutputs;
   m_inputs=_s.m_inputs;
   m_outputs=_s.m_outputs;
-  m_layer=_s.m_layer;
-
+// m_layer=_s.m_layer;
+  m_shaderParams=_s.m_shaderParams;
 
 }
 
@@ -106,11 +100,11 @@ std::shared_ptr<QtNodes::NodeData> Shader::outData(QtNodes::PortIndex port)
 
 bool Shader::eventFilter(QObject *object, QEvent *event)
 {
-  if (object == m_layer)
-  {
+//  if (object == m_layer)
+//  {
 
-    qDebug()<<"edit?";
-  }
+//    qDebug()<<"edit?";
+//  }
 }
 
 
@@ -122,5 +116,20 @@ void Shader::setInData(std::shared_ptr<QtNodes::NodeData>, int)
 
 QWidget * Shader::embeddedWidget()
 {
-  return m_layer;
+  return m_shaderParams;
+}
+
+QString Shader::getParamLayer() const
+{
+  return  m_shaderParams->nodeLayer();
+}
+
+QString Shader::getParamLabel() const
+{
+  return  m_shaderParams->nodeLabel();
+}
+
+QString Shader::getParamVisibility() const
+{
+  return  m_shaderParams->nodeVisibility();
 }
