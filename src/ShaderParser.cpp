@@ -46,15 +46,12 @@ bool ShaderParser::parseShader(const std::string &_shaderName)
     std::istringstream iss(s);
     std::vector<std::string> tokens{std::istream_iterator<std::string>{iss},
                           std::istream_iterator<std::string>{}};
-//    std::cout<<tokens.size()<<'\n';
-//    for(auto t : tokens)
-//      std::cout<<"token "<<t<<'\n';
 
     if(tokens[0] == "shader" || tokens[0]=="surface")
     {
       // oslinfo puts name in " " so remove
       m_shaderName=tokens[1].substr(1,tokens[1].size()-2);
-      std::cout<<"Shader Name "<<m_shaderName<<'\n';
+     //std::cout<<"Shader Name "<<m_shaderName<<'\n';
     }
     else if(tokens[0] == "output")
     {
@@ -83,7 +80,6 @@ void ShaderParser::parseShaderParam(std::vector <std::string>&_tokens,ParamDirec
   else if(_tokens[0]== "color") p.type=ParamType::COLOR;
   else if(_tokens[0]== "matrix") p.type=ParamType::MATRIX;
   else if(_tokens[0]== "string") p.type=ParamType::STRING;
-  else if(_tokens[0]== "void") p.type=ParamType::VOID;
   p.name=_tokens[1];
   if(_dir == ParamDirection::INPUT)
     m_inputs.push_back(p);
@@ -119,7 +115,6 @@ void ShaderParser::print() const
     else if(_p == ParamType::COLOR) return "color " ;
     else if(_p == ParamType::MATRIX) return "matrix " ;
     else if(_p == ParamType::STRING) return "string " ;
-    else if(_p == ParamType::VOID) return "void " ;
     else return "";
   };
 

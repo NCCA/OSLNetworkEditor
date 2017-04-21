@@ -64,7 +64,6 @@ QtNodes::NodeData * MainWindow::createParam(ShaderParser::ParamType _p, QString 
   else if(_p == ShaderParser::ParamType::COLOR) return new Color(QString("color "+_name)) ;
   else if(_p == ShaderParser::ParamType::MATRIX) return new Matrix(QString("matrix "+_name)) ;
   else if(_p == ShaderParser::ParamType::STRING) return new String(QString("string "+_name)) ;
-  else if(_p == ShaderParser::ParamType::VOID) return new Void(QString("void "+_name)) ;
   else return nullptr;
 
 }

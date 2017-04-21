@@ -6,7 +6,7 @@
 class ShaderParser
 {
   public :
-    enum class ParamType {INT,FLOAT,POINT,VECTOR,NORMAL,COLOR,MATRIX,STRING,VOID};
+    enum class ParamType {INT,FLOAT,POINT,VECTOR,NORMAL,COLOR,MATRIX,STRING};
     struct ShaderParam
     {
         std::string name;

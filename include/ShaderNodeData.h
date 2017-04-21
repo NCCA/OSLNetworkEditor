@@ -129,18 +129,5 @@ public:
    QString m_text;
 };
 
-class Void : public QtNodes::NodeData
-{
-public:
-    Void()=default;
-    Void(const QString &_text) : m_text(_text){}
-
-  QtNodes::NodeDataType type() const override
-  {
-    return QtNodes::NodeDataType {"void", m_text};
-  }
-  private :
-   QString m_text;
-};
 
 #endif
