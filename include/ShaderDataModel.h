@@ -2,7 +2,7 @@
 #define SHADERDATAMODEL_H_
 #include <iostream>
 #include <QtCore/QObject>
-
+#include <QLineEdit>
 #include <nodes/NodeData.hpp>
 #include <nodes/NodeDataModel.hpp>
 #include "ShaderNodeData.h"
@@ -26,6 +26,8 @@ public:
   void addInput(QtNodes::NodeData *_input);
   void addOutput(QtNodes::NodeData *_output);
 
+  const std::vector<QtNodes::NodeData *> & inputs() const {return m_inputs;}
+  const std::vector<QtNodes::NodeData *> & outputs() const {return m_outputs;}
   QString caption() const override;
 
   QString name() const override;
@@ -41,6 +43,9 @@ public:
   void setInData(std::shared_ptr<QtNodes::NodeData>, int) override;
 
   QWidget * embeddedWidget() override;
+  protected:
+  bool eventFilter(QObject *object, QEvent *event) override;
+
 
   private :
 
@@ -49,6 +54,8 @@ public:
     unsigned int m_numOutputs;
     std::vector<QtNodes::NodeData *> m_inputs;
     std::vector<QtNodes::NodeData *> m_outputs;
+    QLineEdit * m_layer;
+
 
 
 

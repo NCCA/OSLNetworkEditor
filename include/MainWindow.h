@@ -41,6 +41,8 @@ class MainWindow : public QMainWindow
     QtNodes::NodeData *  createParam(ShaderParser::ParamType _p, QString _name) const;
     void loadShaderFromFile();
     void writeXML()const;
+    void nodeVisitor(QtNodes::Node *data);
+
 
 };
 

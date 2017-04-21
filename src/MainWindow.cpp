@@ -114,6 +114,12 @@ void MainWindow::loadShaderFromFile()
   }
 }
 
+
+void MainWindow::nodeVisitor(QtNodes::Node * data)
+{
+
+}
+
 void MainWindow::writeXML() const
 {
   QString filename = QFileDialog::getSaveFileName(this->parentWidget(),
@@ -129,8 +135,34 @@ void MainWindow::writeXML() const
     xmlWriter.writeStartDocument();
     xmlWriter.writeStartElement("RenderManOSLNetwork");
     xmlWriter.writeStartElement("NodeList");
-    xmlWriter.writeStartElement("Node");
-    xmlWriter.writeEndElement();
+
+    auto visitor=[this,&xmlWriter](QtNodes::NodeDataModel *_node)
+    {
+      xmlWriter.writeStartElement("Node");
+        xmlWriter.writeStartElement("NodeID");
+        xmlWriter.writeCharacters(_node->name());
+          Shader *model= reinterpret_cast<Shader*>(_node);
+          xmlWriter.writeStartElement("Properties");
+          for(auto p : model->inputs())
+          {
+            // I store param name as type -> name so split and proccess
+            QStringList d=p->type().name.split(" ");
+            xmlWriter.writeStartElement(d[1]);
+              xmlWriter.writeStartElement("Type");
+
+              xmlWriter.writeCharacters(d[0]);
+              xmlWriter.writeEndElement();
+            xmlWriter.writeEndElement();
+          }
+          xmlWriter.writeEndElement();
+        xmlWriter.writeEndElement();
+      xmlWriter.writeEndElement();
+    };
+
+    m_scene->iterateOverNodeData(visitor);
+
+//    xmlWriter.writeStartElement("Node");
+//    xmlWriter.writeEndElement();
     xmlWriter.writeEndElement();
 
     xmlWriter.writeStartElement("ConnectionList");

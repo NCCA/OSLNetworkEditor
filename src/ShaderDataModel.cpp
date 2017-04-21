@@ -1,12 +1,21 @@
 #include "ShaderDataModel.h"
-
+#include <QDebug>
 // For some reason CMake could not generate moc-files correctly
 // without having a cpp for an QObject from hpp.
 
 Shader::Shader(QString _name ,unsigned int _numInputs, int _numOutputs)
   : m_name(_name), m_numInputs(_numInputs), m_numOutputs(_numOutputs)
 {
+  m_layer = new QLineEdit("LayerName");
+//  m_layer->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
 
+//    QFont f = m_layer->font();
+//    f.setBold(true);
+//    f.setItalic(true);
+
+//    m_layer->setFont(f);
+    m_layer->setEnabled(true);
+    m_layer->installEventFilter(this);
 }
 
 Shader::Shader(const Shader &_s)
@@ -16,6 +25,7 @@ Shader::Shader(const Shader &_s)
   m_numOutputs=_s.m_numOutputs;
   m_inputs=_s.m_inputs;
   m_outputs=_s.m_outputs;
+  m_layer=_s.m_layer;
 
 
 }
@@ -94,6 +104,17 @@ std::shared_ptr<QtNodes::NodeData> Shader::outData(QtNodes::PortIndex port)
 */
 }
 
+bool Shader::eventFilter(QObject *object, QEvent *event)
+{
+  if (object == m_layer)
+  {
+
+    qDebug()<<"edit?";
+  }
+}
+
+
+
 void Shader::setInData(std::shared_ptr<QtNodes::NodeData>, int)
 {
   //
@@ -101,5 +122,5 @@ void Shader::setInData(std::shared_ptr<QtNodes::NodeData>, int)
 
 QWidget * Shader::embeddedWidget()
 {
-  return nullptr;
+  return m_layer;
 }
