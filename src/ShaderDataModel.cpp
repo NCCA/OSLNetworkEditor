@@ -33,7 +33,6 @@ QString Shader::name() const
 
 std::unique_ptr<QtNodes::NodeDataModel> Shader::clone() const
 {
- //return std::make_unique<Shader>(m_name,m_numInputs,m_numOutputs);
   return std::make_unique<Shader>(*this);
 }
 
@@ -87,10 +86,12 @@ QtNodes::NodeDataType Shader::dataType(QtNodes::PortType portType, QtNodes::Port
 
 std::shared_ptr<QtNodes::NodeData> Shader::outData(QtNodes::PortIndex port)
 {
-  if (port < 1)
+/*  if (port < 1)
     return std::make_shared<Color>();
 
   return std::make_shared<Matrix>();
+
+*/
 }
 
 void Shader::setInData(std::shared_ptr<QtNodes::NodeData>, int)

@@ -4,7 +4,7 @@
 #include <QApplication>
 #include <QFileDialog>
 
-MainWindow::MainWindow(QWidget *_parent ): QMainWindow(_parent)
+MainWindow::MainWindow(const QStringList _args,QWidget *_parent ): QMainWindow(_parent)
 {
   resize(QSize(1024,720));
   setWindowTitle(QString("OSL Shader Network Editor"));
@@ -14,10 +14,18 @@ MainWindow::MainWindow(QWidget *_parent ): QMainWindow(_parent)
   m_view=new QtNodes::FlowView(m_scene);
   m_view->setParent(this);
   m_view->resize(this->size());
-//  addShader("band");
-//  addShader("mixColours");
-//  addShader("dots");
-
+  for(auto a : _args)
+  {
+    addShader(a);
+  }
+  QtNodes::ConnectionStyle::setConnectionStyle(
+  R"(
+  {
+    "ConnectionStyle": {
+      "UseDataDefinedColors": true
+    }
+  }
+  )");
 }
 
 MainWindow::~MainWindow()
@@ -41,7 +49,7 @@ void MainWindow::keyPressEvent(QKeyEvent *_event)
 
 void MainWindow::resizeEvent ( QResizeEvent * _event )
 {
-
+  m_view->resize(_event->size());
 
 }
 
@@ -81,21 +89,14 @@ void MainWindow::addShader(const QString _name)
     model->addOutput(createParam(a.type,a.name.c_str()));
   }
 
-  reg.registerModel<Shader>("nodes",std::move(model));
+  reg.registerModel<Shader>("shaders",std::move(model));
 
 }
 
 void MainWindow::loadShaderFromFile()
 {
-/*  QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                               "./",
-                                               QFileDialog::ShowDirsOnly
 
-                                             | QFileDialog::DontResolveSymlinks);
-*/
-
-
-  QFileDialog dialog(this);
+  QFileDialog dialog(this,"Select OSL Files");
   dialog.setDirectory(QDir::currentPath());
   dialog.setFileMode(QFileDialog::ExistingFiles);
   dialog.setNameFilter(trUtf8("*.oso"));
