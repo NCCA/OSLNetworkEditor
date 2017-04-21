@@ -12,6 +12,16 @@ ShaderParser::ShaderParser(const std::string &_shaderName)
     std::cerr<<"unable to read shader "<<_shaderName<<'\n';
 }
 
+const std::vector<ShaderParser::ShaderParam> & ShaderParser::getInputs() const
+{
+  return m_inputs;
+}
+const std::vector<ShaderParser::ShaderParam> & ShaderParser::getOutputs() const
+{
+  return m_outputs;
+}
+
+
 bool ShaderParser::parseShader(const std::string &_shaderName)
 {
   bool result=true;
@@ -110,6 +120,7 @@ void ShaderParser::print() const
     else if(_p == ParamType::MATRIX) return "matrix " ;
     else if(_p == ParamType::STRING) return "string " ;
     else if(_p == ParamType::VOID) return "void " ;
+    else return "";
   };
 
   std::cout<<"Shader Name "<<m_shaderName<<'\n';
@@ -120,3 +131,20 @@ void ShaderParser::print() const
   for(auto i : m_outputs)
     std::cout<<getType(i.type)<<i.name<<'\n';
 }
+
+
+size_t ShaderParser::numInputs() const
+{
+  return m_inputs.size();
+}
+size_t ShaderParser::numOutputs() const
+{
+  return m_outputs.size();
+
+}
+
+const std::string & ShaderParser::name() const
+{
+  return m_shaderName;
+}
+

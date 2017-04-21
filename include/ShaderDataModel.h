@@ -8,50 +8,49 @@
 #include "ShaderNodeData.h"
 #include <memory>
 
-using QtNodes::NodeData;
-using QtNodes::NodeDataType;
-using QtNodes::NodeDataModel;
-using QtNodes::PortType;
-using QtNodes::PortIndex;
-
-
-
 
 //------------------------------------------------------------------------------
 
 /// The model dictates the number of inputs and outputs for the Node.
 /// In this example it has no logic.
-class Shader : public NodeDataModel
+class Shader : public QtNodes::NodeDataModel
 {
   Q_OBJECT
 
 public:
 
   virtual ~Shader() {}
-  Shader(QString _name ,unsigned int _el) : m_name(_name), m_el(_el){std::cout<<"ctor "<<m_el<<'\n';}
+  Shader(QString _name ,unsigned int _numInputs, int _numOutputs);
   Shader(Shader &&)=default;
-
+  Shader(const Shader &);
+  void addInput(QtNodes::NodeData *_input);
+  void addOutput(QtNodes::NodeData *_output);
 
   QString caption() const override;
 
   QString name() const override;
 
-  std::unique_ptr<NodeDataModel> clone() const override;
-  unsigned int nPorts(PortType portType) const override;
+  std::unique_ptr<QtNodes::NodeDataModel> clone() const override;
+  unsigned int nPorts(QtNodes::PortType portType) const override;
 
 
-  NodeDataType dataType(PortType portType, PortIndex portIndex) const override;
-  std::shared_ptr<NodeData> outData(PortIndex port) override;
+  QtNodes::NodeDataType dataType(QtNodes::PortType portType, QtNodes::PortIndex portIndex) const override;
+  std::shared_ptr<QtNodes::NodeData> outData(QtNodes::PortIndex port) override;
 
 
-  void setInData(std::shared_ptr<NodeData>, int) override;
+  void setInData(std::shared_ptr<QtNodes::NodeData>, int) override;
 
   QWidget * embeddedWidget() override;
 
   private :
 
     QString m_name;
-    unsigned int m_el;
+    unsigned int m_numInputs;
+    unsigned int m_numOutputs;
+    std::vector<QtNodes::NodeData *> m_inputs;
+    std::vector<QtNodes::NodeData *> m_outputs;
+
+
 
 };
 

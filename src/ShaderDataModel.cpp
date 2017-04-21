@@ -3,11 +3,27 @@
 // For some reason CMake could not generate moc-files correctly
 // without having a cpp for an QObject from hpp.
 
+Shader::Shader(QString _name ,unsigned int _numInputs, int _numOutputs)
+  : m_name(_name), m_numInputs(_numInputs), m_numOutputs(_numOutputs)
+{
+
+}
+
+Shader::Shader(const Shader &_s)
+{
+  m_name=_s.m_name;
+  m_numInputs=_s.m_numInputs;
+  m_numOutputs=_s.m_numOutputs;
+  m_inputs=_s.m_inputs;
+  m_outputs=_s.m_outputs;
+
+
+}
 
 
 QString Shader::caption() const
 {
-  return QString("Shader");
+  return  m_name;
 }
 
 QString Shader::name() const
@@ -15,75 +31,61 @@ QString Shader::name() const
   return m_name;
 }
 
-std::unique_ptr<NodeDataModel> Shader::clone() const
+std::unique_ptr<QtNodes::NodeDataModel> Shader::clone() const
 {
-  return std::make_unique<Shader>(m_name,m_el);
+ //return std::make_unique<Shader>(m_name,m_numInputs,m_numOutputs);
+  return std::make_unique<Shader>(*this);
+}
+
+void Shader::addInput(QtNodes::NodeData *_input)
+{
+  m_inputs.emplace_back(_input);
+}
+
+void Shader::addOutput(QtNodes::NodeData *_output)
+{
+  m_outputs.emplace_back(_output);
 }
 
 
-
-unsigned int Shader::nPorts(PortType portType) const
+unsigned int Shader::nPorts(QtNodes::PortType portType) const
 {
-  std::cout<<"nPorts m_el "<<m_el<<'\n';
-  unsigned int result;
+  unsigned int result=0;
 
   switch (portType)
   {
-    case PortType::In:
-      result = m_el;
+    case QtNodes::PortType::In:
+      result = m_numInputs;
       break;
 
-    case PortType::Out:
-      result = 2;
+    case QtNodes::PortType::Out:
+      result = m_numOutputs;
      break;
 
-    default:
-      break;
+    case QtNodes::PortType::None : break;
   }
 
   return result;
 }
 
-NodeDataType Shader::dataType(PortType portType, PortIndex portIndex) const
+QtNodes::NodeDataType Shader::dataType(QtNodes::PortType portType, QtNodes::PortIndex portIndex) const
 {
   switch (portType)
   {
-    case PortType::In:
-      switch (portIndex)
-      {
-        case 0:
-          return Color().type();
-          break;
+    case QtNodes::PortType::In:
+      return m_inputs[portIndex]->type();
+    break;
 
-        case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-          return Normal().type();
-          break;
-      }
-      break;
+    case QtNodes::PortType::Out:
+    return m_outputs[portIndex]->type();
+    break;
 
-    case PortType::Out:
-      switch (portIndex)
-      {
-        case 0:
-          return Color().type();
-          break;
-
-        case 1:
-          return Matrix().type();
-          break;
-      }
-      break;
-
-    default:
-      break;
+    case QtNodes::PortType::None :
+    break;
   }
 }
 
-std::shared_ptr<NodeData> Shader::outData(PortIndex port)
+std::shared_ptr<QtNodes::NodeData> Shader::outData(QtNodes::PortIndex port)
 {
   if (port < 1)
     return std::make_shared<Color>();
@@ -91,7 +93,7 @@ std::shared_ptr<NodeData> Shader::outData(PortIndex port)
   return std::make_shared<Matrix>();
 }
 
-void Shader::setInData(std::shared_ptr<NodeData>, int)
+void Shader::setInData(std::shared_ptr<QtNodes::NodeData>, int)
 {
   //
 }

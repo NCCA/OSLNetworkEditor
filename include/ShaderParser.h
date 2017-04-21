@@ -5,6 +5,7 @@
 #include <string>
 class ShaderParser
 {
+  public :
     enum class ParamType {INT,FLOAT,POINT,VECTOR,NORMAL,COLOR,MATRIX,STRING,VOID};
     struct ShaderParam
     {
@@ -12,13 +13,19 @@ class ShaderParser
         ParamType type;
     };
 
-  public :
-
     ShaderParser(const std::string &_shaderName);
     ShaderParser();
     ShaderParser(const ShaderParser &)=delete;
     bool setShader(const std::string &_shaderName);
     void print() const;
+    size_t numInputs() const;
+    size_t numOutputs() const;
+    const std::string &name() const;
+    const std::vector<ShaderParam> & getInputs() const;
+    const std::vector<ShaderParam> & getOutputs() const;
+
+
+
   private :
     enum class ParamDirection{INPUT,OUTPUT};
     bool parseShader(const std::string &_shaderName);
