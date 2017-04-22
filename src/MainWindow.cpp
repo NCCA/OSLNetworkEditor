@@ -151,20 +151,37 @@ void MainWindow::writeXML() const
         xmlWriter.writeEndElement(); // end Label
         QString visibility=model->getParamVisibility();
         xmlWriter.writeStartElement("Properties");
-          for(auto p : model->inputs())
-          {
-            // I store param name as type -> name so split and proccess
-            QStringList d=p->type().name.split(" ");
-            xmlWriter.writeStartElement(d[1]);
-            xmlWriter.writeStartElement("Visibility");
-            xmlWriter.writeCharacters(visibility);
-            xmlWriter.writeEndElement(); // end Visibility
+        for(auto p : model->inputs())
+        {
+          // I store param name as type -> name so split and proccess
+          QStringList d=p->type().name.split(" ");
+          xmlWriter.writeStartElement(d[1]);
+          xmlWriter.writeStartElement("Visibility");
+          xmlWriter.writeCharacters(visibility);
+          xmlWriter.writeEndElement(); // end Visibility
 
-              xmlWriter.writeStartElement("Type");
-              xmlWriter.writeCharacters(d[0]);
-              xmlWriter.writeEndElement(); // end type
-            xmlWriter.writeEndElement();
-          }
+            xmlWriter.writeStartElement("Type");
+            xmlWriter.writeCharacters(d[0]);
+            xmlWriter.writeEndElement(); // end type
+          xmlWriter.writeEndElement();
+        }
+
+        for(auto p : model->outputs())
+        {
+          // I store param name as type -> name so split and proccess
+          QStringList d=p->type().name.split(" ");
+          xmlWriter.writeStartElement(d[1]);
+          xmlWriter.writeStartElement("Access");
+          xmlWriter.writeCharacters("output");
+          xmlWriter.writeEndElement(); // end Visibility
+
+            xmlWriter.writeStartElement("Type");
+            xmlWriter.writeCharacters(d[0]);
+            xmlWriter.writeEndElement(); // end type
+          xmlWriter.writeEndElement();
+        }
+
+
         xmlWriter.writeEndElement();
       xmlWriter.writeEndElement();
     };
