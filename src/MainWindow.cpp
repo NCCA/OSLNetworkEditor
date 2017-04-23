@@ -4,7 +4,8 @@
 #include <QApplication>
 #include <QFileDialog>
 #include <QXmlStreamWriter>
-
+#include <QDebug>
+#include "nodes/ConnectionGraphicsObject.hpp"
 MainWindow::MainWindow(const QStringList _args,QWidget *_parent ): QMainWindow(_parent)
 {
   resize(QSize(1024,720));
@@ -44,7 +45,8 @@ void MainWindow::keyPressEvent(QKeyEvent *_event)
     case Qt::Key_A :
       loadShaderFromFile();
     break;
-
+    case Qt::Key_S : m_scene->save(); break;
+  case Qt::Key_L : m_scene->load(); break;
     case Qt::Key_W :
       writeXML();
     break;
@@ -188,12 +190,21 @@ void MainWindow::writeXML() const
 
     m_scene->iterateOverNodeData(visitor);
 
-//    xmlWriter.writeStartElement("Node");
-//    xmlWriter.writeEndElement();
+
+
     xmlWriter.writeEndElement();
 
     xmlWriter.writeStartElement("ConnectionList");
     xmlWriter.writeStartElement("Connection");
+    auto connections= m_scene->connections();
+    for(auto c : connections)
+    {
+      //QtNodes::ConnectionGraphicsObject &obj=c.second->getConnectionGraphicsObject();
+      auto n=c.second->dataType();
+      qDebug()<<c.first<<" "<<n.name<<' '<<n.id;
+     // qDebug()<<obj.connection().getNode()
+    }
+
     xmlWriter.writeEndElement();
     xmlWriter.writeEndElement();
 
