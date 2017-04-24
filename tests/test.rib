@@ -1,0 +1,60 @@
+##RenderMan RIB
+version 3.04
+Display "rgb.exr" "it" "rgba" 
+Format 1024 720 1
+Hider "raytrace" "int incremental" [1]
+PixelVariance 0.02
+ShadingRate 20
+Integrator "PxrPathTracer" "integrator" 
+Projection "perspective" "uniform float fov" [30]
+Identity 
+Scale 1 1 -1
+ConcatTransform [ 0.955779 0.0829729 -0.282138 0  -0 0.959374 0.282138 0  0.294086 -0.269662 0.916949 0  2.22045e-16 -0 -4.25323 1 ]
+WorldBegin 
+AttributeBegin 
+Declare "areaLight" "string"
+AreaLightSource "PxrStdAreaLight" "areaLight" "float exposure" [4]
+Bxdf "PxrDisney" "bxdf" "color emitColor" [1 1 1]
+TransformBegin 
+Translate 0.8 1.3 2
+Rotate 180 1 0 0
+Scale 0.1 0.1 0.1
+Geometry "rectlight" 
+TransformEnd 
+AttributeEnd 
+AttributeBegin 
+Pattern "PxrOSL" "mixColours" "string network" ["shadernetwork"]
+Bxdf "PxrDisney" "bxdf" "reference color baseColor" ["mixColours:C.Cout"]
+TransformBegin 
+Translate -1 0 0
+Rotate -45 0 1 0
+Rotate -90 1 0 0
+Scale 0.2 0.2 0.2
+Geometry "teapot" 
+TransformEnd 
+AttributeEnd 
+Pattern "PxrOSL" "mixColours" "float B.fuzz" [0.2] "color B.baseColour" [1 1 1] "color A.C1" [1 1 1] "color B.spotColour" [0 0 1] "color A.C2" [1 0 0] 
+"float B.repeatV" [2] "string A.direction" ["horizontal"] "float B.repeatU" [2] "float A.repeat" [5] "string network" ["shadernetwork"]
+Bxdf "PxrDisney" "bxdf" "reference color baseColor" ["mixColours:C.Cout"]
+TransformBegin 
+Translate 0 0 0
+Rotate -45 0 1 0
+Rotate -90 1 0 0
+Scale 0.2 0.2 0.2
+Geometry "teapot" 
+TransformEnd 
+Pattern "PxrOSL" "mixColours" "float B.fuzz" [0.5] "float C.mixAmmount" [0.5] "color B.spotColour" [0 0 1] "color B.baseColour" [1 1 1] "string A.direction" ["vertical"] "color A.C1" [0 0 0] "color A.C2" [1 0 0] 
+"float B.repeatV" [12] "float B.repeatU" [12] "float A.repeat" [5] "string network" ["shadernetwork"]
+Bxdf "PxrDisney" "bxdf" "reference color baseColor" ["mixColours:C.Cout"]
+TransformBegin 
+Translate 1 0 0
+Rotate -45 0 1 0
+Rotate -90 1 0 0
+Scale 0.2 0.2 0.2
+Geometry "teapot" 
+TransformEnd 
+TransformBegin 
+Bxdf "PxrDisney" "bxdf" "color baseColor" [1 1 1]
+Patch "bilinear" "P" [-5 0 -5 5 0 -5 -5 0 5 5 0 5]
+TransformEnd 
+WorldEnd 

@@ -1,0 +1,25 @@
+
+
+shader testShader ( 
+										//INT,FLOAT,POINT,VECTOR,NORMAL,COLOR,MATRIX,STRING,VOID							
+										int testInt=1,
+										float testFloat=1,
+										point testPoint=point(0),
+										vector testVector=vector(0),
+										normal testNormal=normal(0),
+										color testColor=color(1),
+										matrix testMatrix=matrix(1),
+										string testString="",
+										output int testIntOutput=1,
+										output float testFloatOutput=1,
+										output point testPointOutput=point(0),
+										output vector testVectorOutput=vector(0),
+										output normal testNormalOutput=normal(0),
+										output color testColorOutput=color(0),
+										output matrix testMatrixOutput=matrix(1),
+										output string testStringOutput=""
+										
+						)
+{
+
+}

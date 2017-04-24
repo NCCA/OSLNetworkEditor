@@ -14,20 +14,17 @@ HEADERS+= $$PWD/include/ShaderParser.h \
           $$PWD/include/MainWindow.h \
           $$PWD/include/ShaderParams.h \
           $$PWD/nodes/*.hpp
-
+OTHER_FILES+=$$PWD/tests/*.rib
 QT+= core widgets gui opengl
 
 INCLUDEPATH+=$$PWD/include
 INCLUDEPATH+=$$PWD/nodes
 
-#INCLUDEPATH+=/usr/local/include
-#LIBS+= -L/usr/local/lib -lnodes
 DEFINES+=NODE_EDITOR_STATIC
 MOC_DIR=$$PWD/moc
 OBJECTS_DIR=$$PWD/obj
 UI_HEADERS_DIR=$$PWD/include
 
-FORMS += \
-          $$PWD/ui/ShaderParams.ui
+FORMS+=$$PWD/ui/ShaderParams.ui
 
 RESOURCES+= $$PWD/nodes/resources/resources.qrc

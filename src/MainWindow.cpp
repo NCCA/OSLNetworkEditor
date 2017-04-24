@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QXmlStreamWriter>
 #include <QDebug>
+#include "nodes/Node.hpp"
 #include "nodes/ConnectionGraphicsObject.hpp"
 MainWindow::MainWindow(const QStringList _args,QWidget *_parent ): QMainWindow(_parent)
 {
@@ -12,7 +13,6 @@ MainWindow::MainWindow(const QStringList _args,QWidget *_parent ): QMainWindow(_
   setWindowTitle(QString("OSL Shader Network Editor"));
 
   m_scene= new QtNodes::FlowScene(std::make_shared<QtNodes::DataModelRegistry>());
-
   m_view=new QtNodes::FlowView(m_scene);
   m_view->setParent(this);
   m_view->resize(this->size());
@@ -141,7 +141,7 @@ void MainWindow::writeXML() const
     auto visitor=[this,&xmlWriter](QtNodes::NodeDataModel *_node)
     {
       xmlWriter.writeStartElement("Node");
-        xmlWriter.writeStartElement("NodeID");
+        xmlWriter.writeStartElement("NodeId");
           xmlWriter.writeCharacters(_node->name());
         xmlWriter.writeEndElement(); // end NodeID
         Shader *model= reinterpret_cast<Shader*>(_node);
@@ -188,24 +188,69 @@ void MainWindow::writeXML() const
       xmlWriter.writeEndElement();
     };
 
-    m_scene->iterateOverNodeData(visitor);
+    m_scene->iterateOverNodeDataDependentOrder(visitor);
 
 
 
     xmlWriter.writeEndElement();
 
     xmlWriter.writeStartElement("ConnectionList");
-    xmlWriter.writeStartElement("Connection");
     auto connections= m_scene->connections();
     for(auto c : connections)
     {
-      //QtNodes::ConnectionGraphicsObject &obj=c.second->getConnectionGraphicsObject();
-      auto n=c.second->dataType();
-      qDebug()<<c.first<<" "<<n.name<<' '<<n.id;
-     // qDebug()<<obj.connection().getNode()
+      // OSL XML and Flow reverse Source / Destination!
+      xmlWriter.writeStartElement("Connection");
+      {
+        auto outIndex=c.second->getPortIndex(QtNodes::PortType::Out);
+        auto outNode=c.second->getNode(QtNodes::PortType::Out);
+        auto outPort=outNode->nodeDataModel()->dataType(QtNodes::PortType::Out,outIndex);
+        Shader *model= reinterpret_cast<Shader*>(outNode->nodeDataModel());
+        xmlWriter.writeStartElement("Source");
+        xmlWriter.writeStartElement("NodeId");
+          xmlWriter.writeCharacters(outNode->nodeDataModel()->name());
+        xmlWriter.writeEndElement(); // end NodeID
+        xmlWriter.writeStartElement("NodeLayer");
+          xmlWriter.writeCharacters(model->getParamLayer());
+        xmlWriter.writeEndElement(); // end NodeLayer
+        // I store param name as type -> name so split and proccess
+        QStringList n=outPort.name.split(" ");
+        xmlWriter.writeStartElement("ParameterName");
+          xmlWriter.writeCharacters(n[1]);
+        xmlWriter.writeEndElement(); // end parameterName
+      xmlWriter.writeEndElement(); // end Source
+      }
+      {
+        auto inIndex=c.second->getPortIndex(QtNodes::PortType::In);
+        auto inNode=c.second->getNode(QtNodes::PortType::In);
+        auto inPort=inNode->nodeDataModel()->dataType(QtNodes::PortType::In,inIndex);
+        Shader *model= reinterpret_cast<Shader*>(inNode->nodeDataModel());
+        xmlWriter.writeStartElement("Destination");
+        xmlWriter.writeStartElement("NodeId");
+          xmlWriter.writeCharacters(inNode->nodeDataModel()->name());
+        xmlWriter.writeEndElement(); // end NodeID
+        xmlWriter.writeStartElement("NodeLayer");
+          xmlWriter.writeCharacters(model->getParamLayer());
+        xmlWriter.writeEndElement(); // end NodeLayer
+        // I store param name as type -> name so split and proccess
+        QStringList n=inPort.name.split(" ");
+        xmlWriter.writeStartElement("ParameterName");
+          xmlWriter.writeCharacters(n[1]);
+        xmlWriter.writeEndElement(); // end parameterName
+      xmlWriter.writeEndElement(); // end Destination
+      }
+
+
+//      auto n=c.second->getNode(QtNodes::PortType::In);
+//      auto port=n->nodeDataModel()->dataType(QtNodes::PortType::In,inIndex);
+//      qDebug()<<"input "<<n->nodeDataModel()->name()<<' '<<port.id<<' '<<port.name;
+
+//      n=c.second->getNode(QtNodes::PortType::Out);
+//      port=n->nodeDataModel()->dataType(QtNodes::PortType::Out,outIndex);
+//      qDebug()<<"output "<<n->nodeDataModel()->name()<<' '<<port.id<<' '<<port.name ;
+      xmlWriter.writeEndElement(); // end connection
+
     }
 
-    xmlWriter.writeEndElement();
     xmlWriter.writeEndElement();
 
 
