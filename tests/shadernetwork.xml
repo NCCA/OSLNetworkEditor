@@ -3,6 +3,33 @@
     <NodeList>
         <Node>
             <NodeId>band</NodeId>
+            <NodeLayer>E</NodeLayer>
+            <Label>Band2</Label>
+            <Properties>
+                <C1>
+                    <Visibility>external</Visibility>
+                    <Type>color</Type>
+                </C1>
+                <C2>
+                    <Visibility>external</Visibility>
+                    <Type>color</Type>
+                </C2>
+                <repeat>
+                    <Visibility>external</Visibility>
+                    <Type>float</Type>
+                </repeat>
+                <direction>
+                    <Visibility>external</Visibility>
+                    <Type>string</Type>
+                </direction>
+                <Cout>
+                    <Access>output</Access>
+                    <Type>color</Type>
+                </Cout>
+            </Properties>
+        </Node>
+        <Node>
+            <NodeId>band</NodeId>
             <NodeLayer>A</NodeLayer>
             <Label>Band</Label>
             <Properties>
@@ -31,7 +58,7 @@
         <Node>
             <NodeId>dots</NodeId>
             <NodeLayer>B</NodeLayer>
-            <Label>Dots</Label>
+            <Label>Dot</Label>
             <Properties>
                 <baseColour>
                     <Visibility>external</Visibility>
@@ -61,8 +88,31 @@
         </Node>
         <Node>
             <NodeId>mixColours</NodeId>
+            <NodeLayer>D</NodeLayer>
+            <Label>Mix1</Label>
+            <Properties>
+                <inC1>
+                    <Visibility>external</Visibility>
+                    <Type>color</Type>
+                </inC1>
+                <inC2>
+                    <Visibility>external</Visibility>
+                    <Type>color</Type>
+                </inC2>
+                <mixAmmount>
+                    <Visibility>external</Visibility>
+                    <Type>float</Type>
+                </mixAmmount>
+                <Cout>
+                    <Access>output</Access>
+                    <Type>color</Type>
+                </Cout>
+            </Properties>
+        </Node>
+        <Node>
+            <NodeId>mixColours</NodeId>
             <NodeLayer>C</NodeLayer>
-            <Label>mix</Label>
+            <Label>final</Label>
             <Properties>
                 <inC1>
                     <Visibility>external</Visibility>
@@ -92,7 +142,7 @@
             </Source>
             <Destination>
                 <NodeId>mixColours</NodeId>
-                <NodeLayer>C</NodeLayer>
+                <NodeLayer>D</NodeLayer>
                 <ParameterName>inC2</ParameterName>
             </Destination>
         </Connection>
@@ -104,8 +154,32 @@
             </Source>
             <Destination>
                 <NodeId>mixColours</NodeId>
+                <NodeLayer>D</NodeLayer>
+                <ParameterName>inC1</ParameterName>
+            </Destination>
+        </Connection>
+        <Connection>
+            <Source>
+                <NodeId>mixColours</NodeId>
+                <NodeLayer>D</NodeLayer>
+                <ParameterName>Cout</ParameterName>
+            </Source>
+            <Destination>
+                <NodeId>mixColours</NodeId>
                 <NodeLayer>C</NodeLayer>
                 <ParameterName>inC1</ParameterName>
+            </Destination>
+        </Connection>
+        <Connection>
+            <Source>
+                <NodeId>band</NodeId>
+                <NodeLayer>E</NodeLayer>
+                <ParameterName>Cout</ParameterName>
+            </Source>
+            <Destination>
+                <NodeId>mixColours</NodeId>
+                <NodeLayer>C</NodeLayer>
+                <ParameterName>inC2</ParameterName>
             </Destination>
         </Connection>
     </ConnectionList>

@@ -20,7 +20,8 @@ Shader::Shader(const Shader &_s)
   m_inputs=_s.m_inputs;
   m_outputs=_s.m_outputs;
 // m_layer=_s.m_layer;
-  m_shaderParams=_s.m_shaderParams;
+  m_shaderParams=new ShaderParams();
+
 
 }
 
@@ -132,4 +133,24 @@ QString Shader::getParamLabel() const
 QString Shader::getParamVisibility() const
 {
   return  m_shaderParams->nodeVisibility();
+}
+
+QJsonObject Shader::save() const
+{
+  QJsonObject modelJson;
+
+  modelJson["name"] = name();
+  modelJson["nodeLayer"]= m_shaderParams->nodeLayer();
+  modelJson["nodeLabel"]= m_shaderParams->nodeLabel();
+  modelJson["nodeVisibility"] = m_shaderParams->nodeVisibility();
+
+
+  return modelJson;
+}
+
+void Shader::restore(const QJsonObject &_data)
+{
+  m_shaderParams->setNodeLabel(_data["nodeLabel"].toString());
+  m_shaderParams->setNodeLayer(_data["nodeLayer"].toString());
+  m_shaderParams->setNodeVisibility(_data["nodeVisibility"].toString());
 }

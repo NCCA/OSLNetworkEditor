@@ -43,7 +43,7 @@ Rotate -90 1 0 0
 Scale 0.2 0.2 0.2
 Geometry "teapot" 
 TransformEnd 
-Pattern "PxrOSL" "mixColours" "float B.fuzz" [0.5] "float C.mixAmmount" [0.5] "color B.spotColour" [0 0 1] "color B.baseColour" [1 1 1] "string A.direction" ["vertical"] "color A.C1" [0 0 0] "color A.C2" [1 0 0] 
+Pattern "PxrOSL" "mixColours" "float B.fuzz" [0.5] "float C.mixAmmount" [0.5] "color B.spotColour" [0 0 1] "color B.baseColour" [1 1 1] "string A.direction" ["vertical"] "string E.direction" ["horizontal"] "color A.C1" [0 0 0] "color A.C2" [1 0 0] 
 "float B.repeatV" [12] "float B.repeatU" [12] "float A.repeat" [5] "string network" ["shadernetwork"]
 Bxdf "PxrDisney" "bxdf" "reference color baseColor" ["mixColours:C.Cout"]
 TransformBegin 

@@ -17,6 +17,10 @@ class ShaderParams : public QFrame
     QString nodeLayer() const;
     QString nodeLabel() const;
     QString nodeVisibility() const;
+    void setNodeLayer(QString t);
+    void setNodeLabel(QString t);
+    void setNodeVisibility(QString t);
+
   private:
     Ui::ShaderParams *ui;
 };
