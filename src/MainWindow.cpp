@@ -7,15 +7,19 @@
 #include <QDebug>
 #include "nodes/Node.hpp"
 #include "nodes/ConnectionGraphicsObject.hpp"
-MainWindow::MainWindow(const QStringList _args,QWidget *_parent ): QMainWindow(_parent)
+#include "ui_MainWindow.h"
+MainWindow::MainWindow(const QStringList _args,QWidget *_parent ): QMainWindow(_parent),  ui(new Ui::MainWindow)
 {
+  ui->setupUi(this);
+
   resize(QSize(1024,720));
   setWindowTitle(QString("OSL Shader Network Editor"));
 
   m_scene= new QtNodes::FlowScene(std::make_shared<QtNodes::DataModelRegistry>());
   m_view=new QtNodes::FlowView(m_scene);
   m_view->setParent(this);
-  m_view->resize(this->size());
+  //m_view->resize(ui->m_centralwidget->size());
+  this->setCentralWidget(m_view);
   for(auto a : _args)
   {
     addShader(a);
@@ -28,6 +32,10 @@ MainWindow::MainWindow(const QStringList _args,QWidget *_parent ): QMainWindow(_
     }
   }
   )");
+
+  connect(ui->m_loadScene,SIGNAL(clicked()),this,SLOT(loadScene()));
+  connect(ui->m_loadShaders,SIGNAL(clicked()),this,SLOT(loadShaderFromFile()));
+  connect(ui->m_newScene,&QToolButton::clicked, [this](){m_scene->clearScene();} );
 }
 
 MainWindow::~MainWindow()
@@ -253,16 +261,14 @@ void MainWindow::writeXML() const
 
     xmlWriter.writeEndElement();
 
-
-
-
-
     xmlWriter.writeEndElement();
 
-
-
-
     file.close();
+}
+
+void MainWindow::loadScene()
+{
+  m_scene->load();
 }
 
 

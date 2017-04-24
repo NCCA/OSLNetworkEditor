@@ -25,6 +25,7 @@ MOC_DIR=$$PWD/moc
 OBJECTS_DIR=$$PWD/obj
 UI_HEADERS_DIR=$$PWD/include
 
-FORMS+=$$PWD/ui/ShaderParams.ui
+FORMS+=$$PWD/ui/ShaderParams.ui \
+    ui/MainWindow.ui
 
 RESOURCES+= $$PWD/nodes/resources/resources.qrc

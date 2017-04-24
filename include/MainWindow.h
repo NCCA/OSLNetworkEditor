@@ -13,6 +13,9 @@
 #include "ShaderParser.h"
 
 /// @file MainWindow.h
+namespace Ui {
+  class MainWindow;
+}
 
 class MainWindow : public QMainWindow
 {
@@ -31,7 +34,9 @@ class MainWindow : public QMainWindow
     MainWindow(const QStringList _args,QWidget *_parent = 0);
     /// @brief  dtor free up the GLWindow and all resources
     ~MainWindow();
-  private slots :
+  public slots :
+    void loadScene();
+    void loadShaderFromFile();
 
   private:
 
@@ -39,11 +44,10 @@ class MainWindow : public QMainWindow
     QtNodes::FlowView *m_view;
     void addShader(const QString _name);
     QtNodes::NodeData *  createParam(ShaderParser::ParamType _p, QString _name) const;
-    void loadShaderFromFile();
     void writeXML()const;
     void nodeVisitor(QtNodes::Node *data);
 
-
+    Ui::MainWindow *ui;
 };
 
 #endif // MAINWINDOW_H
